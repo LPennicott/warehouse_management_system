@@ -3,7 +3,8 @@ from django.urls import reverse
 
 # Create your models here.
 
-class Shipping_Units(models.Model):
+
+class ShippingUnits(models.Model):
     LOCATIONS = (
         ('JFK', 'JFK'),
         ('LAX', 'LAX'),
@@ -24,12 +25,22 @@ class Shipping_Units(models.Model):
     length = models.PositiveIntegerField()
     height = models.PositiveIntegerField()
     gross_weight = models.PositiveIntegerField()
+    unit_count = models.PositiveIntegerField()
+    pallet_count = models.PositiveIntegerField()
+    heat_treated_pallet_count = models.PositiveIntegerField()
     remark = models.TextField()
+    shipment_status = models.BooleanField(default=False)
     create_date = models.DateField(auto_now_add=True)
     release_date = models.DateField(null=True, blank=True)
-    hawb = models.CharField(max_length=50, null=True, blank=True)
-    mawb = models.CharField(max_length=50, null=True, blank=True)
-    user = models.ForeignKey('CustomUser',
+    hawb = models.ForeignKey('consols.Consols',
+                             on_delete=models.CASCADE,
+                             related_name='hawbs',
+                             null=True, blank=True)
+    mawb = models.ForeignKey('consols.Consols',
+                             on_delete=models.CASCADE,
+                             related_name='mawbs',
+                             null=True, blank=True)
+    user = models.ForeignKey('users.CustomUser',
                              on_delete=models.CASCADE,
                              )
 
@@ -41,9 +52,23 @@ class Shipping_Units(models.Model):
                        ('can_release', 'Can release a shipment'),
                        ('can_delete', 'Can erase a shipment from existence')
                     )
+        verbose_name = 'Shipping Unit'
 
     def __str__(self):
-        return self.client
+        return f'{self.on_hand} - {self.shipper}'
 
     def get_absolute_url(self):
         return reverse('unit_detail', args=[str(self.on_hand)])
+
+
+class ShipmentImages(models.Model):
+    shipment = models.ForeignKey(ShippingUnits, on_delete=models.CASCADE)
+    shipment_images = models.ImageField(upload_to='shipments/%Y/%m/%d/',
+                                        blank=True,
+                                        null=True)
+
+    class Meta:
+        verbose_name = 'Shipment Image'
+
+
+

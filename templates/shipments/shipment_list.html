@@ -1,0 +1,42 @@
+{% extends '_base.html' %}
+
+{% block title %}Shipping Units{% endblock title %}
+
+{% block content %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Shipment ID</th>
+            <th scope="col">Shipment Create Date</th>
+            <th scope="col">Client</th>
+            <th scope="col">Carrier</th>
+            <th scope="col">Remark</th>
+            <th scope="col">Pallet Count</th>
+            <th scope="col">Pieces</th>
+            <th scope="col">Weight (Lbs)</th>
+            <th scope="col">CBM</th>
+            <th scope="col">Days in House</th>
+            <th scope="col">Pictures</th>
+            <th scope="col">Shipment Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for shipment in shipments %}
+        <tr>
+            <th scope="col"><a href="#">{{ shipment.locations }}-{{ shipment.on_hand }}</a></th>
+            <th scope="col">{{ shipment.create_date }}</th>
+            <th scope="col">{{ shipment.shipper }}</th>
+            <th scope="col">{{ shipment.consignee }}</th>
+            <th scope="col">{{ shipment.remark|truncatewords:7 }}<!-- make a modal --></th>
+            <th scope="col">{{ shipment.pallet_count }}</th>
+            <th scope="col">{{ shipment.unit_count }}</th>
+            <th scope="col">{{ shipment.weight }}</th>
+            <th scope="col">CBM</th>
+            <th scope="col">{{ datetime.datetime.today }}</th>
+            <th scope="col">Pictures</th>
+            <th scope="col">{{ shipment.shipment_status }}</th>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

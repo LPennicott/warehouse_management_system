@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
+import datetime
 # Create your models here.
 
 
@@ -58,7 +59,19 @@ class ShippingUnits(models.Model):
         return f'{self.on_hand} - {self.shipper}'
 
     def get_absolute_url(self):
-        return reverse('unit_detail', args=[str(self.on_hand)])
+        return reverse('shipments:shipment_detail', args=[str(self.on_hand)])
+
+    def volume_weight(self):
+        return (self.length * self.width * self.height)/366
+
+    def gross_weight_to_kg(self):
+        return round(self.gross_weight/2.204, 2)
+
+    def cbm(self):
+        pass
+
+    def days_in_house(self):
+        return str(datetime.date.today() - self.create_date).split(',')[0]
 
 
 class ShipmentImages(models.Model):

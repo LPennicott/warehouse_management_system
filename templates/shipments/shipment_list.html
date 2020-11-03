@@ -23,18 +23,22 @@
     <tbody>
     {% for shipment in shipments %}
         <tr>
-            <th scope="col"><a href="#">{{ shipment.locations }}-{{ shipment.on_hand }}</a></th>
+            <th scope="col"><a href="{{ shipment.get_absolute_url }}">{{ shipment.locations }}-{{ shipment.on_hand }}</a></th>
             <th scope="col">{{ shipment.create_date }}</th>
             <th scope="col">{{ shipment.shipper }}</th>
             <th scope="col">{{ shipment.consignee }}</th>
             <th scope="col">{{ shipment.remark|truncatewords:7 }}<!-- make a modal --></th>
             <th scope="col">{{ shipment.pallet_count }}</th>
             <th scope="col">{{ shipment.unit_count }}</th>
-            <th scope="col">{{ shipment.weight }}</th>
+            <th scope="col">{{ shipment.gross_weight }} lbs/{{ shipment.gross_weight_to_kg }} kg</th>
             <th scope="col">CBM</th>
-            <th scope="col">{{ datetime.datetime.today }}</th>
+            <th scope="col">{{ shipment.days_in_house }}</th>
             <th scope="col">Pictures</th>
-            <th scope="col">{{ shipment.shipment_status }}</th>
+            {% if shipment.shipment_status %}
+                <th scope="col" class="bg-info">Ready</th>
+            {% else %}
+                <th scope="col" class="bg-danger">Not Ready</th>
+            {% endif %}
         </tr>
     {% endfor %}
     </tbody>

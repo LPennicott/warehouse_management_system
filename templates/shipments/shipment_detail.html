@@ -1,0 +1,19 @@
+{% extends '_base.html' %}
+
+{% block title %}Shipment {{ shipment.location }}-{{ shipment.on_hand }}{% endblock title %}
+{% block content %}
+<div class="card text-center">
+  <div class="card-header">
+      {{ shipment.location }}-{{ shipment.on_hand }}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Special title treatment</h5>
+    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    <img src="{{ image.shipment_images }}">
+  </div>
+  <div class="card-footer text-muted">
+    2 days ago
+  </div>
+</div>
+{% endblock content %}
+

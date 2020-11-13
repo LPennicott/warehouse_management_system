@@ -18,27 +18,51 @@
             <th scope="col">Days in House</th>
             <th scope="col">Pictures</th>
             <th scope="col">Shipment Status</th>
+            <th scope="col">Creator</th>
         </tr>
     </thead>
     <tbody>
     {% for shipment in shipments %}
         <tr>
-            <th scope="col"><a href="{{ shipment.get_absolute_url }}">{{ shipment.locations }}-{{ shipment.on_hand }}</a></th>
-            <th scope="col">{{ shipment.create_date }}</th>
-            <th scope="col">{{ shipment.shipper }}</th>
-            <th scope="col">{{ shipment.consignee }}</th>
-            <th scope="col">{{ shipment.remark|truncatewords:7 }}<!-- make a modal --></th>
-            <th scope="col">{{ shipment.pallet_count }}</th>
-            <th scope="col">{{ shipment.unit_count }}</th>
-            <th scope="col">{{ shipment.gross_weight }} lbs/{{ shipment.gross_weight_to_kg }} kg</th>
-            <th scope="col">CBM</th>
-            <th scope="col">{{ shipment.days_in_house }}</th>
-            <th scope="col">Pictures</th>
+            <td scope="col"><a href="{{ shipment.get_absolute_url }}">{{ shipment.locations }}-{{ shipment.on_hand }}</a></td>
+            <td scope="col">{{ shipment.create_date }}</td>
+            <td scope="col">{{ shipment.shipper }}</td>
+            <td scope="col">{{ shipment.consignee }}</td>
+            <td scope="col"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+              Remark
+            </button></td>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Shipment {{ shipment.locations }} - {{ shipment.on_hand }} Remarks</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    {{ shipment.remark }}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <td scope="col">{{ shipment.pallet_count }}</td>
+            <td scope="col">{{ shipment.unit_count }}</td>
+            <td scope="col">{{ shipment.gross_weight }} lbs/{{ shipment.gross_weight_to_kg }} kg</td>
+            <td scope="col">CBM</td>
+            <td scope="col">{{ shipment.days_in_house }}</td>
+            <td scope="col">Pictures</td>
             {% if shipment.shipment_status %}
-                <th scope="col" class="bg-info">Ready</th>
+                <td scope="col" class="bg-info">Ready</td>
             {% else %}
-                <th scope="col" class="bg-danger">Not Ready</th>
+                <td scope="col" class="bg-danger">Not Ready</td>
             {% endif %}
+            <td scope="col">{{ shipment.user.first_name }}</td>
         </tr>
     {% endfor %}
     </tbody>

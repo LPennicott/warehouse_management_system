@@ -1,19 +1,40 @@
 {% extends '_base.html' %}
 
-{% block title %}Shipment {{ shipment.location }}-{{ shipment.on_hand }}{% endblock title %}
+{% block title %}Shipment {{ shipment.locations }}-{{ shipment.on_hand }}{% endblock title %}
 {% block content %}
 <div class="card text-center">
-  <div class="card-header">
-      {{ shipment.location }}-{{ shipment.on_hand }}
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">Special title treatment</h5>
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    <img src="{{ image.shipment_images }}">
-  </div>
-  <div class="card-footer text-muted">
-    2 days ago
-  </div>
+    <div class="card-header">
+        {{ shipment.locations }}-{{ shipment.on_hand }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Shipment Information</h5>
+        <p class="card-text">Shipper: {{ shipment.shipper }}</p>
+        <p class="card-text">Consignee: {{ shipment.consignee }}</p>
+        <p class="card-text">Width: {{ shipment.width }}in. | Length: {{ shipment.length }}in. | Height: {{ shipment.height}}in.</p>
+        <p class="card-text">Weight: {{ shipment.gross_weight }}lbs - {{ shipment.gross_weight_to_kg }}kg</p>
+        <p class="card-text">Carton Count: {{ shipment.unit_count }}</p>
+        <p class="card-text">Pallet Count: {{ shipment.pallet_count }}</p>
+        <p class="card-text">Heat Treated Pallet Count: {{ shipment.heat_treated_pallet_count }}</p>
+        <p class="card-text">Comment: {{ shipment.remark }}</p>
+        <p class="card-text">Shipment Create Date: {{ shipment.create_date }}</p>
+        {% if shipment.release_date %}
+            <p class="card-text">{{ shipment.release_date }}</p>
+        {% endif %}
+        {% if shipment.hawb %}
+            <p class="card-text">{{ shipment.hawb }}</p>
+            <p class="card-text">{{ shipment.mawb }}</p>
+        {% endif %}
+        {% for image in images %}
+            <img src="{{ image.shipment_images.url }}" class="img-thumbnail" width="100px" height="70px">
+        {% endfor %}
+    </div>
+    <div class="card-footer text-muted">
+        {% if user.is_staff %}
+            <p class="card-text">Shipment creator: {{ shipment.user }}</p>
+        {% else %}
+            <p class="card-text">Shipment Info</p>
+        {% endif %}
+    </div>
 </div>
 {% endblock content %}
 

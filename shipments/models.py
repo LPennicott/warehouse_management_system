@@ -1,7 +1,9 @@
+import datetime
+
 from django.db import models
 from django.urls import reverse
 
-import datetime
+
 # Create your models here.
 
 
@@ -48,11 +50,11 @@ class ShippingUnits(models.Model):
     class Meta:
         ordering = ('on_hand',)
         permissions = (
-                       ('can_add_shipment', 'Can add a shipping unit'),
-                       ('can_modify', 'Can modify a shipment'),
-                       ('can_release', 'Can release a shipment'),
-                       ('can_delete', 'Can erase a shipment from existence')
-                    )
+            ('can_add_shipment', 'Can add a shipping unit'),
+            ('can_modify', 'Can modify a shipment'),
+            ('can_release', 'Can release a shipment'),
+            ('can_delete', 'Can erase a shipment from existence')
+        )
         verbose_name = 'Shipping Unit'
 
     def __str__(self):
@@ -62,10 +64,10 @@ class ShippingUnits(models.Model):
         return reverse('shipments:shipment_detail', args=[str(self.on_hand)])
 
     def volume_weight(self):
-        return (self.length * self.width * self.height)/366
+        return (self.length * self.width * self.height) / 366
 
     def gross_weight_to_kg(self):
-        return round(self.gross_weight/2.204, 2)
+        return round(self.gross_weight / 2.204, 2)
 
     def cbm(self):
         pass
@@ -75,13 +77,11 @@ class ShippingUnits(models.Model):
 
 
 class ShipmentImages(models.Model):
-    shipment = models.ForeignKey(ShippingUnits, on_delete=models.CASCADE)
-    shipment_images = models.ImageField(upload_to='shipments/%Y/%m/%d/',
+    shipment = models.ForeignKey(ShippingUnits, on_delete=models.CASCADE,
+                                 related_name='shipment_pics')
+    shipment_images = models.ImageField(upload_to='shipments_images/',
                                         blank=True,
                                         null=True)
 
     class Meta:
         verbose_name = 'Shipment Image'
-
-
-

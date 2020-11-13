@@ -8,7 +8,7 @@ from .models import ShippingUnits, ShipmentImages
 class ShippingUnitAdmin(admin.ModelAdmin):
     list_display = ['on_hand', 'locations', 'shipper', 'gross_weight',
                     'create_date',
-                    'hawb', 'mawb']
+                    'hawb', 'mawb', ]
 
 
 class ShipmentImageAdmin(admin.ModelAdmin):

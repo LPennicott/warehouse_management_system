@@ -72,6 +72,9 @@ class ShippingUnits(models.Model):
     def cbm(self):
         pass
 
+    def identifier(self):
+        return (str(self.locations) + "-" + str(self.on_hand))
+
     def days_in_house(self):
         return str(datetime.date.today() - self.create_date).split(',')[0]
 

@@ -1,10 +1,10 @@
 {% extends '_base.html' %}
 
-{% block title %}Shipment {{ shipment.locations }}-{{ shipment.on_hand }}{% endblock title %}
+{% block title %}Shipment {{ shipment.identifier }}{% endblock title %}
 {% block content %}
 <div class="card text-center">
     <div class="card-header">
-        {{ shipment.locations }}-{{ shipment.on_hand }}
+        {{ shipment.identifier }}
     </div>
     <div class="card-body">
         <h5 class="card-title">Shipment Information</h5>
@@ -27,8 +27,11 @@
         {% for image in images %}
             <img src="{{ image.shipment_images.url }}" class="img-thumbnail" width="100px" height="70px">
         {% endfor %}
+        <br>
     </div>
     <div class="card-footer text-muted">
+        <a href="{% url 'shipments:shipment_update' shipment.pk %}" class="btn btn-info">Update Shipment</a>
+        <a href="{% url 'shipments:shipment_delete' shipment.pk %}" class="btn btn-danger">Delete</a>
         {% if user.is_staff %}
             <p class="card-text">Shipment creator: {{ shipment.user }}</p>
         {% else %}

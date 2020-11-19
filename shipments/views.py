@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, UpdateView, DeleteView
 from .models import ShippingUnits, ShipmentImages
 from .forms import ShipmentForm
-from django.contrib.auth import get_user_model
+from django.urls import reverse_lazy
 # Create your views here.
 
 
@@ -44,3 +44,8 @@ class UpdateShipmentView(UpdateView):
               'gross_weight', 'unit_count', 'pallet_count', 'heat_treated_pallet_count',
               'remark', 'shipment_status')
     template_name = 'shipments/shipment_update.html'
+
+class DeleteShipmentView(DeleteView):
+    model = ShippingUnits
+    template_name = 'shipments/shipment_delete.html'
+    success_url = reverse_lazy('shipments:shipment_list')

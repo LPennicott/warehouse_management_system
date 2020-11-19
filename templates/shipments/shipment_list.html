@@ -24,7 +24,7 @@
     <tbody>
     {% for shipment in shipments %}
         <tr>
-            <td scope="col"><a href="{{ shipment.get_absolute_url }}">{{ shipment.locations }}-{{ shipment.on_hand }}</a></td>
+            <td scope="col"><a href="{{ shipment.get_absolute_url }}">{{ shipment.identifier }}</a></td>
             <td scope="col">{{ shipment.create_date }}</td>
             <td scope="col">{{ shipment.shipper }}</td>
             <td scope="col">{{ shipment.consignee }}</td>
@@ -36,7 +36,7 @@
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Shipment {{ shipment.locations }} - {{ shipment.on_hand }} Remarks</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Shipment {{ shipment.identifier }} Remarks</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>

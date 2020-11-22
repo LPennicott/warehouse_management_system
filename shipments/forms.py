@@ -2,7 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
 from django import forms
 
-from .models import ShippingUnits
+from .models import ShippingUnits, ShipmentImages
 
 
 class ShipmentForm(forms.ModelForm):
@@ -40,3 +40,8 @@ class ShipmentForm(forms.ModelForm):
             'remark',
             self.helper.add_input(Submit('submit', 'Create Shipment'))
         )
+
+class ShipmentImageForm(forms.ModelForm):
+    class Meta:
+        model = ShipmentImages
+        fields = ('shipment_images',)

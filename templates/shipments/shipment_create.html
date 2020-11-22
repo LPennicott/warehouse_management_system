@@ -7,7 +7,7 @@
 <div class="container">
     <form method="POST">
         {% csrf_token %}
-        {{ form|crispy }                }
+        {% crispy form %}
     </form>
 </div>
 {% endblock content %}

@@ -12,5 +12,7 @@ urlpatterns = [
     path('shipments/update/<int:pk>', views.UpdateShipmentView.as_view(),
          name='shipment_update'),
     path('shipments/delete/<int:pk>', views.DeleteShipmentView.as_view(),
-         name='shipment_delete')
+         name='shipment_delete'),
+    path('shipments/image_add/<int:pk>', views.image_add,
+         name='shipment_image'),
 ]

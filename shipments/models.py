@@ -31,7 +31,7 @@ class ShippingUnits(models.Model):
     unit_count = models.PositiveIntegerField()
     pallet_count = models.PositiveIntegerField()
     heat_treated_pallet_count = models.PositiveIntegerField()
-    remark = models.TextField()
+    remark = models.TextField(null=True, blank=True)
     shipment_status = models.BooleanField(default=False)
     create_date = models.DateField(auto_now_add=True)
     release_date = models.DateField(null=True, blank=True)
@@ -85,6 +85,13 @@ class ShipmentImages(models.Model):
     shipment_images = models.ImageField(upload_to='shipments_images/',
                                         blank=True,
                                         null=True)
+
+    @property
+    def get_photo_url(self):
+        if self.shipment_images and hasattr(self.shipment_images, 'url'):
+            return self.shipment_images.url
+        else:
+            return "/static/images/user.jpg"
 
     class Meta:
         verbose_name = 'Shipment Image'

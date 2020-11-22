@@ -1,13 +1,18 @@
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import TemplateView, UpdateView, DeleteView
-from .models import ShippingUnits, ShipmentImages
-from .forms import ShipmentForm
 from django.urls import reverse_lazy
+from django.views.generic import TemplateView, UpdateView, DeleteView
+
+from .forms import ShipmentForm, ShipmentImageForm
+from .models import ShippingUnits
+
+
 # Create your views here.
 
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
+
 
 def shipment_list(request):
     shipments = ShippingUnits.objects.all()
@@ -21,8 +26,10 @@ def shipment_detail(request, pk):
     images = shipment.shipment_pics.all()
     return render(request,
                   'shipments/shipment_detail.html',
-                  {'shipment': shipment,
-                   'images': images})
+                  {
+                      'shipment': shipment,
+                      'images': images
+                  })
 
 
 def shipment_create(request):
@@ -38,12 +45,37 @@ def shipment_create(request):
             return redirect(new_shipment.get_absolute_url())
 
 
+def image_add(request, pk):
+    if request.method == 'POST':
+        form = ShipmentImageForm(request.POST, request.FILES)
+        if form.is_valid() and request.FILES:
+            shipment_image = get_object_or_404(ShippingUnits, pk=pk)
+            if request.FILES['shipment_images'].name.split('.')[-1].lower() in (
+            'jpeg', 'png', 'jpg'):
+                new_image = form.save(commit=False)
+                new_image.shipment = shipment_image
+                new_image.save()
+                return redirect(shipment_image.get_absolute_url())
+            else:
+                messages.warning(request,
+                                 'Incorrect file type! Use "jpeg", "png" or '
+                                 '"jpg"!')
+                return redirect(shipment_image.get_absolute_url())
+    else:
+        form = ShipmentImageForm()
+        shipment = get_object_or_404(ShippingUnits, pk=pk)
+        return render(request, 'shipments/add_image.html',
+                      {'form': form, 'shipment': shipment})
+
+
 class UpdateShipmentView(UpdateView):
     model = ShippingUnits
     fields = ('locations', 'shipper', 'consignee', 'width', 'length', 'height',
-              'gross_weight', 'unit_count', 'pallet_count', 'heat_treated_pallet_count',
+              'gross_weight', 'unit_count', 'pallet_count',
+              'heat_treated_pallet_count',
               'remark', 'shipment_status')
     template_name = 'shipments/shipment_update.html'
+
 
 class DeleteShipmentView(DeleteView):
     model = ShippingUnits

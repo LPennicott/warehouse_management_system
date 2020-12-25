@@ -4,67 +4,74 @@
 
 {% block content %}
 <table class="table table-striped">
-    <thead>
-        <tr>
-            <th scope="col">Shipment ID</th>
-            <th scope="col">Shipment Create Date</th>
-            <th scope="col">Client</th>
-            <th scope="col">Carrier</th>
-            <th scope="col">Remark</th>
-            <th scope="col">Pallet Count</th>
-            <th scope="col">Pieces</th>
-            <th scope="col">Weight (Lbs)</th>
-            <th scope="col">CBM</th>
-            <th scope="col">Days in House</th>
-            <th scope="col">Pictures</th>
-            <th scope="col">Shipment Status</th>
-            <th scope="col">Creator</th>
-        </tr>
-    </thead>
-    <tbody>
+  <thead>
+    <tr>
+      <th scope="col">Shipment ID</th>
+      <th scope="col">Shipment Create Date</th>
+      <th scope="col">Client</th>
+      <th scope="col">Carrier</th>
+      <th scope="col">Remark</th>
+      <th scope="col">Pallet Count</th>
+      <th scope="col">Pieces</th>
+      <th scope="col">Weight (Lbs)</th>
+      <th scope="col">CBM</th>
+      <th scope="col">Days in House</th>
+      <th scope="col">Pictures</th>
+      <th scope="col">Shipment Status</th>
+      <th scope="col">Creator</th>
+    </tr>
+  </thead>
+  <tbody>
     {% for shipment in shipments %}
-        <tr>
-            <td scope="col"><a href="{{ shipment.get_absolute_url }}">{{ shipment.identifier }}</a></td>
-            <td scope="col">{{ shipment.create_date }}</td>
-            <td scope="col">{{ shipment.shipper }}</td>
-            <td scope="col">{{ shipment.consignee }}</td>
-            <td scope="col"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-              Remark
-            </button></td>
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Shipment {{ shipment.identifier }} Remarks</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    {{ shipment.remark }}
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
-              </div>
+    <tr>
+      <td scope="col"><a href="{{ shipment.get_absolute_url }}">{{ shipment.identifier }}</a></td>
+      <td scope="col">{{ shipment.create_date }}</td>
+      <td scope="col">{{ shipment.shipper }}</td>
+      <td scope="col">{{ shipment.consignee }}</td>
+      <td scope="col"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+          Remark
+        </button></td>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Shipment {{ shipment.identifier }} Remarks</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-            
-            <td scope="col">{{ shipment.pallet_count }}</td>
-            <td scope="col">{{ shipment.unit_count }}</td>
-            <td scope="col">{{ shipment.gross_weight }} lbs/{{ shipment.gross_weight_to_kg }} kg</td>
-            <td scope="col">CBM</td>
-            <td scope="col">{{ shipment.days_in_house }}</td>
-            <td scope="col">Pictures</td>
-            {% if shipment.shipment_status %}
-                <td scope="col" class="bg-info">Ready</td>
-            {% else %}
-                <td scope="col" class="bg-danger">Not Ready</td>
-            {% endif %}
-            <td scope="col">{{ shipment.user.first_name }}</td>
-        </tr>
+            <div class="modal-body">
+              {{ shipment.remark }}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <td scope="col">{{ shipment.pallet_count }}</td>
+      <td scope="col">{{ shipment.unit_count }}</td>
+      <td scope="col">{{ shipment.gross_weight }} lbs/{{ shipment.gross_weight_to_kg }} kg</td>
+      <td scope="col">CBM</td>
+      <td scope="col">{{ shipment.days_in_house }}</td>
+      <td scope="col">Pictures</td>
+      {% if shipment.shipment_status %}
+      <td scope="col" class="bg-info">Ready</td>
+      {% else %}
+      <td scope="col" class="bg-danger">Not Ready</td>
+      {% endif %}
+      <td scope="col">{{ shipment.user.first_name }}</td>
+    </tr>
     {% endfor %}
-    </tbody>
+  </tbody>
 </table>
+
+<br>
+<div class="container">
+  <h2><a href="{% url 'shipments:create_consol' %}" class="btn btn-primary btn-lg btn-block">Create Consolidation</a>
+  </h2>
+</div>
 {% endblock content %}

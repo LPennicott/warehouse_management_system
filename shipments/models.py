@@ -9,14 +9,14 @@ from django.urls import reverse
 
 class ShippingUnits(models.Model):
     LOCATIONS = (
-        ('JFK', 'JFK'),
-        ('LAX', 'LAX'),
-        ('ORD', 'ORD'),
+        ("JFK", "JFK"),
+        ("LAX", "LAX"),
+        ("ORD", "ORD"),
     )
     locations = models.CharField(
         max_length=3,
         choices=LOCATIONS,
-        default='JFK',
+        default="JFK",
     )
     on_hand = models.AutoField(
         primary_key=True,
@@ -35,33 +35,34 @@ class ShippingUnits(models.Model):
     shipment_status = models.BooleanField(default=False)
     create_date = models.DateField(auto_now_add=True)
     release_date = models.DateField(null=True, blank=True)
-    hawb = models.ForeignKey('consols.Consols',
-                             on_delete=models.CASCADE,
-                             related_name='hawbs',
-                             null=True, blank=True)
-    mawb = models.ForeignKey('consols.Consols',
-                             on_delete=models.CASCADE,
-                             related_name='mawbs',
-                             null=True, blank=True)
-    user = models.ForeignKey('users.CustomUser',
-                             on_delete=models.CASCADE,
-                             )
+    hawb = models.CharField(max_length=15)
+    mawb = models.ForeignKey(
+        "consols.Consols",
+        on_delete=models.CASCADE,
+        related_name="mawbs",
+        null=True,
+        blank=True,
+    )
+    user = models.ForeignKey(
+        "users.CustomUser",
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
-        ordering = ('on_hand',)
+        ordering = ("on_hand",)
         permissions = (
-            ('can_add_shipment', 'Can add a shipping unit'),
-            ('can_modify', 'Can modify a shipment'),
-            ('can_release', 'Can release a shipment'),
-            ('can_delete', 'Can erase a shipment from existence')
+            ("can_add_shipment", "Can add a shipping unit"),
+            ("can_modify", "Can modify a shipment"),
+            ("can_release", "Can release a shipment"),
+            ("can_delete", "Can erase a shipment from existence"),
         )
-        verbose_name = 'Shipping Unit'
+        verbose_name = "Shipping Unit"
 
     def __str__(self):
-        return f'{self.on_hand} - {self.shipper}'
+        return f"{self.on_hand} - {self.shipper}"
 
     def get_absolute_url(self):
-        return reverse('shipments:shipment_detail', args=[str(self.on_hand)])
+        return reverse("shipments:shipment_detail", args=[str(self.on_hand)])
 
     def volume_weight(self):
         return (self.length * self.width * self.height) / 366
@@ -73,25 +74,39 @@ class ShippingUnits(models.Model):
         pass
 
     def identifier(self):
-        return (str(self.locations) + "-" + str(self.on_hand))
+        return str(self.locations) + "-" + str(self.on_hand)
 
     def days_in_house(self):
-        return str(datetime.date.today() - self.create_date).split(',')[0]
+        return str(datetime.date.today() - self.create_date).split(",")[0]
 
 
 class ShipmentImages(models.Model):
-    shipment = models.ForeignKey(ShippingUnits, on_delete=models.CASCADE,
-                                 related_name='shipment_pics')
-    shipment_images = models.ImageField(upload_to='shipments_images/',
-                                        blank=True,
-                                        null=True)
+    shipment = models.ForeignKey(
+        ShippingUnits, on_delete=models.CASCADE, related_name="shipment_pics"
+    )
+    shipment_images = models.ImageField(
+        upload_to="shipments_images/", blank=True, null=True
+    )
 
     @property
     def get_photo_url(self):
-        if self.shipment_images and hasattr(self.shipment_images, 'url'):
+        if self.shipment_images and hasattr(self.shipment_images, "url"):
             return self.shipment_images.url
         else:
             return "/static/images/user.jpg"
 
     class Meta:
-        verbose_name = 'Shipment Image'
+        verbose_name = "Shipment Image"
+
+
+class Consols(models.Model):
+    create_date = models.DateField(auto_now_add=True)
+    mawb = models.CharField(max_length=13, primary_key=True)
+    client = models.CharField(max_length=50)
+    cutoff = models.DateField()
+    destination = models.CharField(max_length=4)
+    shipment_status = models.BooleanField(default=True)
+
+    class Meta:
+
+        verbose_name = "Consol"

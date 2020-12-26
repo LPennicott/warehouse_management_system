@@ -5,6 +5,17 @@ from django.urls import reverse
 
 
 # Create your models here.
+class Consols(models.Model):
+    create_date = models.DateField(auto_now_add=True)
+    mawb = models.CharField(max_length=13, primary_key=True)
+    client = models.CharField(max_length=50)
+    cutoff = models.DateField()
+    destination = models.CharField(max_length=4)
+    shipment_status = models.BooleanField(default=True)
+
+    class Meta:
+
+        verbose_name = "Consol"
 
 
 class ShippingUnits(models.Model):
@@ -35,9 +46,9 @@ class ShippingUnits(models.Model):
     shipment_status = models.BooleanField(default=False)
     create_date = models.DateField(auto_now_add=True)
     release_date = models.DateField(null=True, blank=True)
-    hawb = models.CharField(max_length=15)
+    hawb = models.CharField(max_length=15, null=True, blank=True)
     mawb = models.ForeignKey(
-        "consols.Consols",
+        Consols,
         on_delete=models.CASCADE,
         related_name="mawbs",
         null=True,
@@ -97,16 +108,3 @@ class ShipmentImages(models.Model):
 
     class Meta:
         verbose_name = "Shipment Image"
-
-
-class Consols(models.Model):
-    create_date = models.DateField(auto_now_add=True)
-    mawb = models.CharField(max_length=13, primary_key=True)
-    client = models.CharField(max_length=50)
-    cutoff = models.DateField()
-    destination = models.CharField(max_length=4)
-    shipment_status = models.BooleanField(default=True)
-
-    class Meta:
-
-        verbose_name = "Consol"

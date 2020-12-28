@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import (
 )
 
 from .forms import ShipmentForm, ShipmentImageForm
-from .models import ShippingUnits
+from .models import ShippingUnits, Consols
 
 
 # Create your views here.
@@ -120,6 +120,11 @@ class Consolidation(LoginRequiredMixin, ListView):
         units = request.POST.getlist("onhands[]")
         mawb = request.POST.get("mawb")
         hawb = request.POST.get("hawb")
+        destination = request.POST.get("destination")
+        cutoff = request.POST.get("cutoff")
+        Consols.objects.create(
+            mawb=mawb, destination=destination, cutoff=cutoff
+        )
         ShippingUnits.objects.filter(on_hand__in=units).update(mawb=mawb)
         ShippingUnits.objects.filter(on_hand__in=units).update(hawb=hawb)
         return redirect("shipments:shipment_list")

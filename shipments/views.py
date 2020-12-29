@@ -2,7 +2,13 @@ from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.db.models import Sum
-from django.views.generic import TemplateView, UpdateView, DeleteView, ListView, CreateView
+from django.views.generic import (
+    TemplateView,
+    UpdateView,
+    DeleteView,
+    ListView,
+    CreateView,
+)
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
@@ -97,6 +103,7 @@ class UpdateShipmentView(UpdateView):
         "shipment_status",
     )
     template_name = "shipments/shipment_update.html"
+    context_object_name = "shipment"
 
 
 class DeleteShipmentView(DeleteView):
@@ -114,34 +121,54 @@ class CreateConsolView(LoginRequiredMixin, CreateView):
 
 class Consolidation(LoginRequiredMixin, ListView):
     model = Consols
-    template_name = 'shipments/consolidation_list.html'
+    template_name = "shipments/consolidation_list.html"
     login_url = "account_login"
+    context_object_name = "consols"
     success_url = reverse_lazy("shipments:consolidation_list")
-    
-    
+
+
 def consoldation_shipments(request, pk):
     mawb_selection = get_object_or_404(Consols, mawb=pk)
     shipments = ShippingUnits.objects.filter(mawb=None)
-    if request.method == 'POST':
+    if request.method == "POST":
         consol_form = ConsolidationForm(request.POST)
         units = request.POST.getlist("onhands[]")
-        ShippingUnits.objects.filter(on_hand__in=units).mawb = mawb_selection
-        return redirect('shipments:consolidation_list')
+        ShippingUnits.objects.filter(on_hand__in=units).update(
+            mawb=mawb_selection.mawb
+        )
+        return redirect("shipments:consolidation_list")
     else:
         consol_form = ConsolidationForm()
-        return render(request,
-                      'shipments/consolidation_update.html',
-                      {'form': consol_form,
-                       'mawb': mawb_selection,
-                       'shipments': shipments})
-  
+        return render(
+            request,
+            "shipments/consolidation_update.html",
+            {
+                "form": consol_form,
+                "mawb": mawb_selection,
+                "shipments": shipments,
+            },
+        )
+
 
 def consol_detail(request, pk):
     consol = get_object_or_404(Consols, mawb=pk)
     shipments = consol.mawbs.all()
-    total_weight = shipments.aggregate(Sum('gross_weight'))
     return render(
         request,
         "shipments/consol_detail.html",
-        {"consol": consol, "shipments": shipments, 'total_weight': total_weight.get('gross_weight', 0)},
+        {"consol": consol, "shipments": shipments,},
     )
+
+
+def remove_shipments_from_consol(request, pk):
+    if request.method == "POST":
+        units = request.POST.getlist("onhands[]")
+        ShippingUnits.objects.filter(on_hand__in=units).update(mawb=None)
+        return redirect("shipments:consol_detail", pk=pk)
+
+
+class UpdateConsolView(UpdateView):
+    model = Consols
+    fields = ("mawb", "cutoff", "destination")
+    context_object_name = "consol"
+    template_name = "shipments/consol_update.html"

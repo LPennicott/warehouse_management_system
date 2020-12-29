@@ -19,21 +19,25 @@
             <td scope="col"><a href="{{ consol.get_absolute_url }}">{{ consol.mawb }}</a></td>
             <td scope="col">{{ consol.create_date }}</td>
             <td scope="col">{{ consol.cutoff }}</td>
-            {% if shipments %}
-            <td scope="col">{{ consol.total_weight }}lbs</td>
-            {% if shipment.shipment_status %}
+            {% if consol.consol_weight %}
+            <td scope="col">{{ consol.consol_weight }}lbs</td>
+            {% else %}
+            <td scope="col">No Shipments</td>
+            {% endif %}
+            {% if consol.shipment_status %}
             <td scope="col" class="bg-info">Ready</td>
             {% else %}
             <td scope="col" class="bg-danger">Not Ready</td>
             {% endif %}
 
-            {% endif %}
-            <div class="container">
-                <h2><a href="{% url 'shipments:add_shipments' %}" class="btn btn-primary">Add Shipments to Consol</a>
-                </h2>
-            </div>
 
-            <td scope="col">{{ shipment.user.first_name }}</td>
+            {% if consol.mawbs.all %}
+            <td><a href="{% url 'shipments:add_shipments' consol.pk %}" class="btn btn-primary">Add More Shipments to
+                    Consol</a></td>
+            {% else %}
+            <td><a href="{% url 'shipments:add_shipments' consol.pk %}" class="btn btn-primary">Add Shipments to
+                    Consol</a></td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

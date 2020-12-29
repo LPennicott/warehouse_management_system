@@ -10,29 +10,30 @@ class Consols(models.Model):
     mawb = models.CharField(max_length=13, primary_key=True)
     cutoff = models.DateField()
     destination = models.CharField(max_length=4)
-    shipment_status = models.BooleanField(default=True)
+    shipment_status = models.BooleanField(default=False)
 
     class Meta:
 
         verbose_name = "Consol"
-        
+
     def __str__(self):
         return f"{self.mawb}"
 
     def get_absolute_url(self):
         return reverse("shipments:consol_detail", args=[self.mawb])
-    
+
     def consol_weight(self):
-        total_weight = self.mawbs.aggregate(models.Sum('gross_weight'))
-        return total_weight.get('gross_weight', 0)
-    
+        total_weight = self.mawbs.all().aggregate(models.Sum("gross_weight"))
+        return total_weight.get("gross_weight__sum", 0)
+
     def consol_weight_in_kg(self):
-        total_weight = self.mawbs.aggregate(models.Sum('gross_weight'))
-        return total_weight.get('gross_weight', 0)/2.204
-    
+        total_weight = self.mawbs.all().aggregate(models.Sum("gross_weight"))
+        return round(total_weight.get("gross_weight__sum", 0) / 2.204, 2)
+
     def consol_cartons(self):
-        total_carton = self.mawbs.aggregate(models.Sum('unit_count'))
-        return total_carton.get('unit_count', 0)
+        total_carton = self.mawbs.all().aggregate(models.Sum("unit_count"))
+        return total_carton.get("unit_count__sum", 0)
+
 
 class ShippingUnits(models.Model):
     LOCATIONS = (
@@ -41,14 +42,9 @@ class ShippingUnits(models.Model):
         ("ORD", "ORD"),
     )
     locations = models.CharField(
-        max_length=3,
-        choices=LOCATIONS,
-        default="JFK",
+        max_length=3, choices=LOCATIONS, default="JFK",
     )
-    on_hand = models.AutoField(
-        primary_key=True,
-        editable=False,
-    )
+    on_hand = models.AutoField(primary_key=True, editable=False,)
     shipper = models.CharField(max_length=50)
     consignee = models.CharField(max_length=50)
     width = models.PositiveIntegerField()
@@ -70,10 +66,7 @@ class ShippingUnits(models.Model):
         null=True,
         blank=True,
     )
-    user = models.ForeignKey(
-        "users.CustomUser",
-        on_delete=models.CASCADE,
-    )
+    user = models.ForeignKey("users.CustomUser", on_delete=models.CASCADE,)
 
     class Meta:
         ordering = ("on_hand",)

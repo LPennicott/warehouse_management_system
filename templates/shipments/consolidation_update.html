@@ -1,0 +1,42 @@
+{% extends '_base.html' %}
+
+{% block title %}Add to Consol {{ mawb.mawb }}{% endblock title %}
+
+{% block content %}
+{% if shipments %}
+<h1 class="text-center">Add Shipments to Consol {{ mawb.mawb }}</h1>
+{% for shipment in shipments %}
+
+<br>
+<form method="post" action="{% url 'shipments:add_shipments' mawb.pk %}">
+    {% csrf_token %}
+    <div class="container">
+        <div class="card text-center">
+            <div class="card-header">
+                <h5 class="card-title"><input type="checkbox" aria-label="Checkbox for following text input"
+                        name="onhands[]" value="{{ shipment.on_hand }}">&nbsp;<a
+                        href="{{ shipment.get_absolute_url }}">Shipping
+                        Unit: {{ shipment.identifier }}</a></h5>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Shipment Create Date: {{ shipment.create_date }}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Shipper: {{ shipment.shipper }}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Unit Count: {{ shipment.unit_count }}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Weight: {{ shipment.gross_weight }}lbs /
+                    {{shipment.gross_weight_to_kg}}kg</h6>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <input type="submit" value="Add to Consolidation" class="btn btn-info btn-lg">
+    </div>
+</form>
+<br>
+{% else %}
+<div class="container">
+    <h1>Create Shipments to add to consol</h1>
+    <a href="{% url 'shipments:shipment_create' %}" class="btn btn-primary btn-lg">Create Shipments</a>
+</div>
+{% endif %}
+
+{% endblock content %}

@@ -28,6 +28,16 @@ urlpatterns = [
         name="create_consol",
     ),
     path(
-        "shipments/consol/", views.Consolidation.as_view(), name="save_consol"
+        "shipments/consol_update/<str:pk>", views.consoldation_shipments, name="add_shipments"
+    ),
+    path(
+        'shipments/consolidations/',
+        views.Consolidation.as_view(),
+        name='consolidation_list'
+    ),
+    path(
+        'shipments/consolidation/<str:pk>/',
+        views.consol_detail,
+        name='consol_detail',
     ),
 ]

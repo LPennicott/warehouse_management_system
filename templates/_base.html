@@ -60,8 +60,10 @@
                         class="list-group-item list-group-item-action bg-light">
                         Create Shipment
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action bg-light">Morbi leo risus</a>
-                    <a href="#" class="list-group-item list-group-item-action bg-light">Porta ac consectetur ac</a>
+                    <a href="{% url 'shipments:consolidation_list' %}"
+                        class="list-group-item list-group-item-action bg-light">Consolidations</a>
+                    <a href="{% url 'shipments:create_consol' %}"
+                        class="list-group-item list-group-item-action bg-light">Create Consolidation</a>
                     <a href="#" class="list-group-item list-group-item-action bg-light">Vestibulum at eros</a>
                 </div>
             </div>

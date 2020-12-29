@@ -8,7 +8,6 @@ from django.urls import reverse
 class Consols(models.Model):
     create_date = models.DateField(auto_now_add=True)
     mawb = models.CharField(max_length=13, primary_key=True)
-    client = models.CharField(max_length=50)
     cutoff = models.DateField()
     destination = models.CharField(max_length=4)
     shipment_status = models.BooleanField(default=True)
@@ -16,7 +15,24 @@ class Consols(models.Model):
     class Meta:
 
         verbose_name = "Consol"
+        
+    def __str__(self):
+        return f"{self.mawb}"
 
+    def get_absolute_url(self):
+        return reverse("shipments:consol_detail", args=[self.mawb])
+    
+    def consol_weight(self):
+        total_weight = self.mawbs.aggregate(models.Sum('gross_weight'))
+        return total_weight.get('gross_weight', 0)
+    
+    def consol_weight_in_kg(self):
+        total_weight = self.mawbs.aggregate(models.Sum('gross_weight'))
+        return total_weight.get('gross_weight', 0)/2.204
+    
+    def consol_cartons(self):
+        total_carton = self.mawbs.aggregate(models.Sum('unit_count'))
+        return total_carton.get('unit_count', 0)
 
 class ShippingUnits(models.Model):
     LOCATIONS = (

@@ -1,0 +1,37 @@
+{% extends '_base.html' %}
+
+{% block title %}Consolidation {{ consol.mawb }}{% endblock title %}
+{% block content %}
+<div class="card text-center">
+    <div class="card-header">
+        {{ consol.mawb }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Consol Details</h5>
+        <p class="card-text">Create Date: {{ consol.create_date }}</p>
+        <p class="card-text">Destination: {{ consol.destination }}</p>
+        <p class="card-text">Weight: {{ consol.consol_weight }}lbs - {{ consol.consol_weight_in_kg }}kg</p>
+        <p class="card-text">Carton Count: {{ consol.consol_cartons }}</p>
+
+        <div class="container">
+            <h2><a href="{% url 'shipments:add_shipments' consol.pk %}" class="btn btn-primary">Add Shipments to
+                    Consol</a>
+            </h2>
+        </div>
+
+        {% for shipment in shipments %}
+        <a href="{{ shipment.get_absolute_url }}">
+            <p class="=card-text">{{ shipment.identifier }}</p>
+        </a>
+        {% endfor %}
+        <br>
+    </div>
+    <div class="card-footer text-muted">
+        {% if messages %}
+        {% for message in messages %}
+        <h3 class="bg-warning">{{ message }}</h3>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

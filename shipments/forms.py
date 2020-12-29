@@ -2,7 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
 from django import forms
 
-from .models import ShippingUnits, ShipmentImages
+from .models import ShippingUnits, ShipmentImages, Consols
 
 
 class ShipmentForm(forms.ModelForm):
@@ -45,3 +45,16 @@ class ShipmentImageForm(forms.ModelForm):
     class Meta:
         model = ShipmentImages
         fields = ('shipment_images',)
+        
+        
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
+class ConsolidationForm(forms.ModelForm):
+    class Meta:
+        model = Consols
+        fields = ('mawb', 'cutoff', 'destination',)
+        widgets = {
+            'cutoff': DateInput()
+        }

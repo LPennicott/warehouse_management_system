@@ -1,0 +1,47 @@
+{% extends '_base.html' %}
+
+{% block title %}Consolidations{% endblock title %}
+
+{% block content %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">MAWB</th>
+            <th scope="col">Consol Create Date</th>
+            <th scope="col">Shipment Cutoff</th>
+            <th scope="col">Consol Weight</th>
+            <th scope="col">Shipment Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for consol in consols %}
+        <tr>
+            <td scope="col"><a href="{{ consol.get_absolute_url }}">{{ consol.mawb }}</a></td>
+            <td scope="col">{{ consol.create_date }}</td>
+            <td scope="col">{{ consol.cutoff }}</td>
+            {% if shipments %}
+            <td scope="col">{{ consol.total_weight }}lbs</td>
+            {% if shipment.shipment_status %}
+            <td scope="col" class="bg-info">Ready</td>
+            {% else %}
+            <td scope="col" class="bg-danger">Not Ready</td>
+            {% endif %}
+
+            {% endif %}
+            <div class="container">
+                <h2><a href="{% url 'shipments:add_shipments' %}" class="btn btn-primary">Add Shipments to Consol</a>
+                </h2>
+            </div>
+
+            <td scope="col">{{ shipment.user.first_name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+<div class="container">
+    <h2><a href="{% url 'shipments:create_consol' %}" class="btn btn-primary btn-lg btn-block">Create Consolidation</a>
+    </h2>
+</div>
+{% endblock content %}

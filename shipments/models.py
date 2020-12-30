@@ -24,15 +24,15 @@ class Consols(models.Model):
 
     def consol_weight(self):
         total_weight = self.mawbs.all().aggregate(models.Sum("gross_weight"))
-        if total_weight:
+        if total_weight["gross_weight__sum"]:
             return total_weight["gross_weight__sum"]
         else:
             return 0
 
     def consol_weight_in_kg(self):
         total_weight = self.mawbs.all().aggregate(models.Sum("gross_weight"))
-        if total_weight:
-            return total_weight["gross_weight__sum"] / 2.204
+        if total_weight["gross_weight__sum"]:
+            return round(total_weight.get("gross_weight__sum", 0) / 2.204, 2)
         else:
             return 0
 

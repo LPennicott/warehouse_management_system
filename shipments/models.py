@@ -47,6 +47,12 @@ class ShippingUnits(models.Model):
         ("LAX", "LAX"),
         ("ORD", "ORD"),
     )
+    SHIPMENT_STATUSES = (
+        ("not_ready", "Not Ready"),
+        ("ready", "Ready"),
+        ("completed", "Completed"),
+        ("issue", "Issue"),
+    )
     locations = models.CharField(
         max_length=3, choices=LOCATIONS, default="JFK",
     )
@@ -61,7 +67,9 @@ class ShippingUnits(models.Model):
     pallet_count = models.PositiveIntegerField()
     heat_treated_pallet_count = models.PositiveIntegerField()
     remark = models.TextField(null=True, blank=True)
-    shipment_status = models.BooleanField(default=False)
+    shipment_status = models.CharField(
+        max_length=15, choices=SHIPMENT_STATUSES, default="not_ready",
+    )
     create_date = models.DateField(auto_now_add=True)
     release_date = models.DateField(null=True, blank=True)
     hawb = models.CharField(max_length=15, null=True, blank=True)

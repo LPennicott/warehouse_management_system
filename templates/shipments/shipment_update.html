@@ -4,10 +4,10 @@
 {% block title %}Update Shipment {{ shipment.identifier }}{% endblock title %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-primary">Confirm Changes</button>
-    </form>
-
+<form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-primary">Confirm Changes</button>
+</form>
+<br>
 {% endblock content %}

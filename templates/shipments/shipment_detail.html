@@ -10,7 +10,9 @@
         <h5 class="card-title">Shipment Information</h5>
         <p class="card-text">Shipper: {{ shipment.shipper }}</p>
         <p class="card-text">Consignee: {{ shipment.consignee }}</p>
-        <p class="card-text">Width: {{ shipment.width }}in. | Length: {{ shipment.length }}in. | Height: {{ shipment.height}}in.</p>
+        <p class="card-text">Width: {{ shipment.width }}in. | Length: {{ shipment.length }}in. | Height:
+            {{shipment.height}}
+            in.</p>
         <p class="card-text">Weight: {{ shipment.gross_weight }}lbs - {{ shipment.gross_weight_to_kg }}kg</p>
         <p class="card-text">Carton Count: {{ shipment.unit_count }}</p>
         <p class="card-text">Pallet Count: {{ shipment.pallet_count }}</p>
@@ -18,32 +20,32 @@
         <p class="card-text">Comment: {{ shipment.remark }}</p>
         <p class="card-text">Shipment Create Date: {{ shipment.create_date }}</p>
         {% if shipment.release_date %}
-            <p class="card-text">{{ shipment.release_date }}</p>
+        <p class="card-text">{{ shipment.release_date }}</p>
         {% endif %}
         {% if shipment.hawb %}
-            <p class="card-text">HAWB: {{ shipment.hawb }}</p>
-            <p class="card-text">MAWB: {{ shipment.mawb }}</p>
+        <p class="card-text">HAWB: {{ shipment.hawb }}</p>
+        <p class="card-text">MAWB: {{ shipment.mawb }}</p>
         {% endif %}
         {% for image in images %}
-            <img src="{{ image.shipment_images.url }}" class="img-thumbnail" width="100px" height="70px">
+        <a href="{{ image.shipment_images.url }}" target="blank"><img src="{{ image.shipment_images.url }}"
+                class="img-thumbnail" width="100px" height="70px"></a>
         {% endfor %}
         <br>
     </div>
     <div class="card-footer text-muted">
         {% if messages %}
-            {% for message in messages %}
-                <h3 class="bg-warning">{{ message }}</h3>
-            {% endfor %}
+        {% for message in messages %}
+        <h3 class="bg-warning">{{ message }}</h3>
+        {% endfor %}
         {% endif %}
         <a href="{% url 'shipments:shipment_image' shipment.pk %}" class="btn btn-info">Add Images</a>
         <a href="{% url 'shipments:shipment_update' shipment.pk %}" class="btn btn-info">Update Shipment</a>
         <a href="{% url 'shipments:shipment_delete' shipment.pk %}" class="btn btn-danger">Delete</a>
         {% if user.is_staff %}
-            <p class="card-text">Shipment creator: {{ shipment.user }}</p>
+        <p class="card-text">Shipment creator: {{ shipment.user }}</p>
         {% else %}
-            <p class="card-text">Shipment Info</p>
+        <p class="card-text">Shipment Info</p>
         {% endif %}
     </div>
 </div>
 {% endblock content %}
-
